@@ -23,7 +23,7 @@ zignaly_key = os.getenv("zignaly_key")
 tap_key = os.getenv("tap_key")
 
 threadhold = 25
-sellThreadhold = 55
+sellThreadhold = 61
 buyDelay = 3600
 
 def checkAndBuy(timer = 0, selling = False):
