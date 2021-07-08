@@ -26,11 +26,11 @@ threadhold = 19
 sellThreadhold = 61
 buyDelay = 3600
 
-def checkAndBuy(timer = 0, selling = False):
+def checkAndBuy(timer = 0, selling = False, boughtAt = 1000000000):
     if timer > time.time():
         trend_r = requests.get('https://api.taapi.io/supertrend?secret='+tap_key+'&exchange=binance&symbol=BTC/USDT&interval=15m&backtrack=2')
         print(trend_r.json())
-        return (timer, selling)
+        return (timer, selling, boughtAt)
     rsi_r = requests.get("https://api.taapi.io/rsi?secret="+tap_key+"&exchange=binance&symbol=BTC/USDT&interval=15m&backtracks=7&optInTimePeriod=12")
     # rsi_r = requests.get("https://api.taapi.io/rsi?secret="+tap_key+"&exchange=binance&symbol=BTC/USDT&interval=1h&backtracks=2")
     rsi = rsi_r.json()
@@ -43,19 +43,29 @@ def checkAndBuy(timer = 0, selling = False):
         currentRSI = rsi[0]['value']
         # if selling and currentRSI == max(rsi_all) and currentRSI >= sellThreadhold:
         if selling == True and rsi[0]['value'] >= sellThreadhold:
-            zig_r = requests.get('https://zignaly.com/api/signals.php?key='+zignaly_key+'&pair=BTCUSDT&type=exit&exchange=binance&signalId=1111')
-            print('sell:' + str(rsi[0]['value']))
-            return (0, False)
+
+            coinbase_r = requests.get("https://api.coincap.io/v2/assets/bitcoin")
+            coinbase = coinbase_r.json()
+            currentPrice = float(coinbase["data"]["priceUsd"])
+            if currentPrice > boughtAt:
+                zig_r = requests.get('https://zignaly.com/api/signals.php?key='+zignaly_key+'&pair=BTCUSDT&type=exit&exchange=binance&signalId=1111')
+                print('sell:' + str(rsi[0]['value']))
+                return (0, False, 0)
+
         # elif currentRSI == min(rsi_all) and currentRSI <= threadhold:
         elif selling == False and rsi[0]['value'] <= threadhold:
+            coinbase_r = requests.get("https://api.coincap.io/v2/assets/bitcoin")
+            coinbase = coinbase_r.json()
+            currentPrice = float(coinbase["data"]["priceUsd"])
             zig_r = requests.get('https://zignaly.com/api/signals.php?key='+zignaly_key+'&pair=BTCUSDT&type=entry&exchange=binance&positionSizePercentage=50&signalId=1111')
-            print('buy:' + str(rsi[0]['value']))
-            return (time.time() + buyDelay, True)
+            print('buy:' + str(rsi[0]['value']))            
+            return (time.time() + buyDelay, True, currentPrice)
         else:
             print(rsi[0]['value'])
-            return (0, selling)
+            return (0, selling, boughtAt)
     except Exception as error:
         traceback.print_exc()
-        return (0, selling)
+        return (0, selling, boughtAt)
+    return (0, selling, boughtAt)
 
 # checkAndBuy()

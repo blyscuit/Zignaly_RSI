@@ -3,12 +3,15 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 times = 0
 selling = False
-def fn():
+boughtAt = 1000000000
+def z_fn():
     global times
     global selling
-    res = checkAndBuy(times, selling)
+    global boughtAt
+    res = checkAndBuy(times, selling, boughtAt)
     times = res[0] + 2
     selling = res[1]
+    boughtAt = res[2]
 
 
 scheduler = BlockingScheduler()
