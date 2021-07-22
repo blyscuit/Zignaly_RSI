@@ -47,6 +47,7 @@ def checkAndBuy(timer = 0, selling = False, boughtAt = 1000000000):
             coinbase_r = requests.get("https://api.coincap.io/v2/assets/bitcoin")
             coinbase = coinbase_r.json()
             currentPrice = float(coinbase["data"]["priceUsd"])
+            print('current:' + str(currentPrice) + ' bought:' + str(boughtAt) + ' execute:' + str(currentPrice > boughtAt))
             if currentPrice > boughtAt:
                 zig_r = requests.get('https://zignaly.com/api/signals.php?key='+zignaly_key+'&pair=BTCUSDT&type=exit&exchange=binance&signalId=1111')
                 print('sell:' + str(rsi[0]['value']))
@@ -61,7 +62,7 @@ def checkAndBuy(timer = 0, selling = False, boughtAt = 1000000000):
             print('buy:' + str(rsi[0]['value']))            
             return (time.time() + buyDelay, True, currentPrice)
         else:
-            print(rsi[0]['value'])
+            # print(rsi[0]['value'])
             return (0, selling, boughtAt)
     except Exception as error:
         traceback.print_exc()
