@@ -22,8 +22,8 @@ load_dotenv()
 zignaly_key = os.getenv("zignaly_key")
 tap_key = os.getenv("tap_key")
 
-threadhold = 19
-sellThreadhold = 61
+threadhold = 29
+sellThreadhold = 58
 buyDelay = 3600
 
 def checkAndBuy(timer = 0, selling = False, boughtAt = 1000000000):
