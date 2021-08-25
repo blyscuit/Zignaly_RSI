@@ -50,7 +50,7 @@ def checkAndBuy(timer = 0, selling = False, boughtAt = 1000000000):
             print('current:' + str(currentPrice) + ' bought:' + str(boughtAt) + ' execute:' + str(currentPrice > boughtAt))
             if currentPrice > boughtAt:
                 zig_r = requests.get('https://zignaly.com/api/signals.php?key='+zignaly_key+'&pair=BTCUSDT&type=exit&exchange=binance&signalId=1111')
-                print('sell:' + str(rsi[0]['value']))
+                print('sell:' + str(rsi[0]['value']) + str(currentPrice))
                 return (0, False, 0)
 
         # elif currentRSI == min(rsi_all) and currentRSI <= threadhold:
@@ -58,8 +58,8 @@ def checkAndBuy(timer = 0, selling = False, boughtAt = 1000000000):
             coinbase_r = requests.get("https://api.coincap.io/v2/assets/bitcoin")
             coinbase = coinbase_r.json()
             currentPrice = float(coinbase["data"]["priceUsd"])
-            zig_r = requests.get('https://zignaly.com/api/signals.php?key='+zignaly_key+'&pair=BTCUSDT&type=entry&exchange=binance&positionSizePercentage=50&signalId=1111')
-            print('buy:' + str(rsi[0]['value']))            
+            zig_r = requests.get('https://zignaly.com/api/signals.php?key='+zignaly_key+'&pair=BTCUSDT&type=entry&exchange=binance&positionSizePercentage=50&signalId=1111&limitPrice='+currentPrice+'&buyTTL=7200&DCAAmountPercentage1=50&DCATargetPercentage1=-3&orderType=limit&takeProfitAmountPercentage1=100&takeProfitPercentage1=2&trailingStopDistancePercentage=-0.5&trailingStopTriggerPercentage=1')
+            print('buy:' + str(rsi[0]['value']) + str(currentPrice))            
             return (time.time() + buyDelay, True, currentPrice)
         else:
             # print(rsi[0]['value'])
