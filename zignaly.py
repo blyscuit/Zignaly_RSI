@@ -24,7 +24,7 @@ load_dotenv()
 zignaly_key = os.getenv("zignaly_key")
 tap_key = os.getenv("tap_key")
 
-threadhold = 20
+threadhold = 26
 sellThreadhold = 58
 buyDelay = 3600
 
