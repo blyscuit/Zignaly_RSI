@@ -24,7 +24,7 @@ load_dotenv()
 zignaly_key = os.getenv("zignaly_key")
 tap_key = os.getenv("tap_key")
 
-threadhold = 21
+threadhold = 20
 sellThreadhold = 58
 buyDelay = 3600
 
@@ -62,7 +62,7 @@ def checkAndBuy(timer = 0, selling = False, boughtAt = 1000000000):
             coinbase = coinbase_r.json()
             currentPrice = float(coinbase["data"]["priceUsd"])
             num1= randint(111111111,99999999999)
-            zig_r = requests.get('https://zignaly.com/api/signals.php?key='+zignaly_key+'&pair=BTCUSDT&type=entry&exchange=binance&positionSizePercentage=33&signalId='+str(num1)+'&limitPrice='+str(currentPrice)+'&buyTTL=7200&DCAAmountPercentage1=50&DCATargetPercentage1=-3&orderType=limit&takeProfitAmountPercentage1=100&takeProfitPercentage1=2&trailingStopDistancePercentage=-0.5&trailingStopTriggerPercentage=1')
+            zig_r = requests.get('https://zignaly.com/api/signals.php?key='+zignaly_key+'&pair=BTCUSDT&type=entry&exchange=binance&positionSizePercentage=10&signalId='+str(num1)+'&limitPrice='+str(currentPrice)+'&buyTTL=7200&DCAAmountPercentage1=50&DCATargetPercentage1=-3&orderType=limit&takeProfitAmountPercentage1=100&takeProfitPercentage1=2&trailingStopDistancePercentage=-0.5&trailingStopTriggerPercentage=1')
             print('buy:' + str(rsi[0]['value']) + ' ' + str(currentPrice))            
             return (time.time() + buyDelay, True, currentPrice)
         else:
