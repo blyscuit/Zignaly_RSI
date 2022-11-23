@@ -5,11 +5,6 @@ Zignaly RSI
 Buy BTC dip based on hourly RSI
 
 '''
-import math
-import time
-import numpy as np
-from datetime import datetime
-import pprint
 from dotenv import load_dotenv
 import os
 import requests as requests
